@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ed17ea854c09ff14699da243b44a4502
+guid: c1e5078f5c112da44a0afe8ee4951d13
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -108,7 +108,70 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: MenuBotton_0
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 366
+        width: 906
+        height: 367
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3065906eb12fc2c4f817da00bc324823
+      internalID: 327040364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MenuBotton_1
+      rect:
+        serializedVersion: 2
+        x: 1002
+        y: 667
+        width: 835
+        height: 359
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f9fffe88d6ad0d4097c89a3067f52b3
+      internalID: 458153200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MenuBotton_2
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 127
+        width: 930
+        height: 343
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f990123dbbf5e894e894ce175e08d0e8
+      internalID: 454753835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -119,7 +182,10 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      MenuBotton_0: 327040364
+      MenuBotton_1: 458153200
+      MenuBotton_2: 454753835
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
