@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class OtterSwimming : MonoBehaviour
+public class OtterMovement : MonoBehaviour
 {
     public float speed = 2f;
     public float boostSpeed = 5f; // 加速速度
