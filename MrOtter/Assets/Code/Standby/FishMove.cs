@@ -1,26 +1,43 @@
 using UnityEngine;
+using System.Collections;
 
 public class FishMovement : MonoBehaviour
 {
-    public float speed = 2f; // 魚的移動速度
+    // 移動參數
+    public float speed = 2f;
+    [Tooltip("建議2-3倍即可")]
+    public float boostMultiplier = 0.4f;
+    public float boostDuration = 0.2f;
+    public float accelerationSharpness = 1.5f;
+
+    // 物理控制
+    [Range(0, 1)] public float drag = 2f;
+
+    // 音效參數
+    public AudioClip clickSound;
+    [Range(0, 1)] public float volume = 1f;
+
     private Vector2 direction;
     private Rigidbody2D rb;
+    private Coroutine speedBoostCoroutine;
+    private float originalSpeed;
+    private AudioSource audioSource;
+    private Vector2 targetVelocity;
 
     void Start()
     {
-        // 獲取 Rigidbody2D 組件
         rb = GetComponent<Rigidbody2D>();
-        if (rb == null)
+        audioSource = GetComponent<AudioSource>();
+
+        originalSpeed = speed;
+        InitializeDirection();  // 初始化方向
+        ApplyInitialScale();    // 初始化縮放
+
+        if (rb != null)
         {
-            Debug.LogError("No Rigidbody2D found on " + gameObject.name);
-            return; // 如果沒有 Rigidbody2D，則不執行移動邏輯
+            rb.gravityScale = 0;
+            rb.drag = drag;
         }
-
-        // 隨機生成初始方向
-        direction = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-
-        // 設置初始縮放
-        transform.localScale = new Vector3(0.18f, 0.18f, 1f);
     }
 
     void Update()
@@ -28,53 +45,125 @@ public class FishMovement : MonoBehaviour
         if (rb != null)
         {
             CheckBoundary();
-            // 移動魚
-            rb.MovePosition(rb.position + direction * speed * Time.deltaTime);
-            // 更新魚的朝向
-            UpdateFishOrientation();
+            UpdateMovement();
+            UpdateFishOrientation();  // 新增方法調用
         }
+    }
+
+    // 新增方法：初始化方向
+    void InitializeDirection()
+    {
+        do
+        {
+            direction = new Vector2(
+                Random.Range(-1f, 1f),
+                Random.Range(-1f, 1f)
+            ).normalized;
+        } while (direction.magnitude < 0.1f);
+    }
+
+    // 新增方法：更新魚的朝向
+    void UpdateFishOrientation()
+    {
+        transform.localScale = new Vector3(
+            Mathf.Sign(direction.x) * 0.18f,
+            0.18f,
+            1f
+        );
+    }
+
+    void ApplyInitialScale()
+    {
+        UpdateFishOrientation();
+    }
+
+    void UpdateMovement()
+    {
+        targetVelocity = direction * speed;
+        rb.velocity = Vector2.Lerp(rb.velocity, targetVelocity, Time.deltaTime * accelerationSharpness);
     }
 
     void CheckBoundary()
     {
-        // 獲取魚的當前位置
         Vector2 position = transform.position;
 
-        // 檢查 X 邊界
         if (position.x <= -8 || position.x >= 8)
         {
-            // 反轉 X 方向
             direction.x = -direction.x;
-
-            // 確保魚在邊界內
             position.x = Mathf.Clamp(position.x, -8 + 0.1f, 8 - 0.1f);
-            transform.position = position; // 更新魚的位置
+            transform.position = position;
         }
 
-        // 檢查 Y 邊界
         if (position.y <= -3 || position.y >= 3)
         {
-            // 反轉 Y 方向
             direction.y = -direction.y;
-
-            // 確保魚在邊界內
             position.y = Mathf.Clamp(position.y, -3 + 0.1f, 3 - 0.1f);
-            transform.position = position; // 更新魚的位置
+            transform.position = position;
         }
     }
 
-    void UpdateFishOrientation()
+    private void OnMouseDown()
     {
-        // 根據方向翻轉魚的朝向
-        if (direction.x < 0)
+        PlayClickSound();
+        ChangeDirection();
+        ApplySpeedBoost();
+    }
+
+    void ChangeDirection()
+    {
+        InitializeDirection();  // 重新初始化方向
+        UpdateFishOrientation(); // 更新視覺方向
+
+        float forceMultiplier = Random.Range(5f, 15f);
+        rb.AddForce(direction * forceMultiplier, ForceMode2D.Impulse);
+    }
+
+    void ApplySpeedBoost()
+    {
+        if (speedBoostCoroutine != null) StopCoroutine(speedBoostCoroutine);
+        speedBoostCoroutine = StartCoroutine(SpeedBoost());
+    }
+
+    private IEnumerator SpeedBoost()
+    {
+        float currentBoost = boostMultiplier;
+
+        float elapsed = 0f;
+        while (elapsed < 0.2f)
         {
-            // 向左游動，翻轉魚
-            transform.localScale = new Vector3(-0.18f, 0.18f, 1f);
+            currentBoost = Mathf.Lerp(1f, boostMultiplier, elapsed / 0.2f);
+            speed = originalSpeed * currentBoost;
+            elapsed += Time.deltaTime;
+            yield return null;
         }
-        else if (direction.x > 0)
+
+        speed = originalSpeed * boostMultiplier;
+        yield return new WaitForSeconds(boostDuration * 0.4f);
+
+        elapsed = 0f;
+        while (elapsed < 0.2f)
         {
-            // 向右游動，正向
-            transform.localScale = new Vector3(0.18f, 0.18f, 1f);
+            currentBoost = Mathf.Lerp(boostMultiplier, 1f, elapsed / 0.2f);
+            speed = originalSpeed * currentBoost;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        speed = originalSpeed;
+    }
+
+    private void PlayClickSound()
+    {
+        if (clickSound == null) return;
+
+        if (audioSource != null)
+        {
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(clickSound, volume);
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(clickSound, transform.position, volume);
         }
     }
 }

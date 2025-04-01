@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Standby.unity
     guid: 7f3d68e1d354ae4429c6bc018fd8e46d
+  - enabled: 1
+    path: Assets/Scenes/Standby_RealWorld.unity
+    guid: c5cbd081ccddcf0409a914016af84feb
   m_configObjects: {}

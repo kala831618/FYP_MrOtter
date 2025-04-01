@@ -86,10 +86,18 @@ public class OtterBaseMovement : MonoBehaviour
 
     private Vector2 GenerateRandomTarget()
     {
-        return new Vector2(
+        Vector2 baseTarget = new Vector2(
             partBMoveAreaCenter.x + Random.Range(-partBMoveSize.x / 2, partBMoveSize.x / 2),
             partBMoveAreaCenter.y + Random.Range(-partBMoveSize.y / 2, partBMoveSize.y / 2)
         );
+
+        // 強制 Y 軸不超過當前位置
+        if (baseTarget.y > transform.position.y)
+        {
+            baseTarget.y = transform.position.y - 0.1f; // 微調確保向下
+        }
+
+        return baseTarget;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
