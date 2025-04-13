@@ -12,10 +12,10 @@ TagManager:
   - Collider
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Character
+  - Ground
+  - Obstacle
+  - UI2
   - 
   - 
   - 
