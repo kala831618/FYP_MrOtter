@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Standby_RealWorld.unity
     guid: c5cbd081ccddcf0409a914016af84feb
+  - enabled: 1
+    path: Assets/Scenes/Topic_Food.unity
+    guid: 60ec56807cfb25240b68875fa0260a61
   m_configObjects: {}
